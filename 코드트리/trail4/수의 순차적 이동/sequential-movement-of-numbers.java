@@ -10,7 +10,7 @@ class Cell {
 }
 
 public class Main {
-    public static int[][] grid;
+    public static Cell[][] cellGrid;
     public static int n;
     public static int[] dx = new int[] {-1, -1, -1, 0, 0, 1, 1, 1};
     public static int[] dy = new int[] {-1, 0, 1, -1, 1, -1, 0, 1};
@@ -19,15 +19,16 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         n = sc.nextInt();
         int m = sc.nextInt();
-        grid = new int[n][n];
+        cellGrid = new Cell[n][n];
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
-                grid[i][j] = sc.nextInt();
+                cellGrid[i][j] = new Cell(i, j, sc.nextInt());
         
         List<Cell> cells = new ArrayList<>();
+
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                cells.add(new Cell(i, j, grid[i][j]));
+                cells.add(cellGrid[i][j]);
             }
         }
         Collections.sort(cells, (c1, c2) -> Integer.compare(c1.value, c2.value));
@@ -35,10 +36,6 @@ public class Main {
         while (m-- > 0) {
             for (Cell cell : cells) {
                 Cell nextCell = getLargestNeighborCell(cell);
-
-                // grid 갱신
-                grid[cell.x][cell.y] = nextCell.value;
-                grid[nextCell.x][nextCell.y] = cell.value;
 
                 // cells 리스트 갱신
                 int tempX = cell.x;
@@ -48,13 +45,18 @@ public class Main {
                 nextCell.x = tempX;
                 nextCell.y = tempY;
                 cells.set(nextCell.value - 1, nextCell);
+
+                // grid 갱신
+                Cell tempCell = cellGrid[cell.x][cell.y];
+                cellGrid[cell.x][cell.y] = cellGrid[nextCell.x][nextCell.y];
+                cellGrid[nextCell.x][nextCell.y] = tempCell;
             }
         }
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                sb.append(grid[i][j] + " ");
+                sb.append(cellGrid[i][j].value + " ");
             }
             sb.append("\n");
         }
@@ -62,15 +64,17 @@ public class Main {
     }
 
     public static Cell getLargestNeighborCell(Cell cell) {
-        Cell nextCell = new Cell(-1, -1, 0);
+        int maxVal = 0;
+        Cell nextCell = null;
         for (int d = 0; d < 8; d++) {
             int nextX = dx[d] + cell.x;
             int nextY = dy[d] + cell.y;
             if (!inRange(nextX, nextY)) continue;
-            if (nextCell.value < grid[nextX][nextY]) {
-                nextCell.x = nextX;
-                nextCell.y = nextY;
-                nextCell.value = grid[nextX][nextY];
+
+            Cell candCell = cellGrid[nextX][nextY];
+            if (maxVal < candCell.value) {
+                maxVal = candCell.value;
+                nextCell = candCell;
             }
         }
         return nextCell;

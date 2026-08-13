@@ -38,21 +38,14 @@ public class Main {
 
     public static int dfs(int x, int y) {
         int cnt = 1;
-        boolean canProceed = false;
         for (int d = 0; d < 4; d++) {
             int nx = x + dx[d];
             int ny = y + dy[d];
             if (!inRange(nx, ny) || grid[nx][ny] == 0 || visited[nx][ny] == true) continue;
             visited[nx][ny] = true;
             cnt += dfs(nx, ny);
-            canProceed = true;
         }
-
-        if (!canProceed) {
-            return 1;
-        } else {
-            return cnt;
-        }
+        return cnt;
     }
 
     public static boolean inRange(int x, int y) {

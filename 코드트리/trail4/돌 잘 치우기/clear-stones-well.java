@@ -67,27 +67,30 @@ public class Main {
         initialize(visited);
 
         int cnt = 0;
-        for (Pos start : starts) {
-            if (!visited[start.x][start.y] && grid[start.x][start.y] == 0) {
-                visited[start.x][start.y] = true;
-                cnt += 1;
-                posQ.add(start);
 
-                while (!posQ.isEmpty()) {
-                    Pos cur = posQ.poll();
-                    for (int d = 0; d < 4; d++) {
-                        int nextX = cur.x + dx[d];
-                        int nextY = cur.y + dy[d];
-                        if (!inRange(nextX, nextY, visited)) continue;
-                        if (visited[nextX][nextY]) continue;
-                        if (grid[nextX][nextY] == 1) continue;
-                        visited[nextX][nextY] = true;
-                        cnt += 1;
-                        posQ.add(new Pos(nextX, nextY));
-                    }
-                }
+        // 시작점들을 큐에 다 넣기
+        for (Pos start : starts) {
+          if (!visited[start.x][start.y] && grid[start.x][start.y] == 0) {
+            visited[start.x][start.y] = true;
+            cnt += 1;
+            posQ.add(start);
+          }
+        }
+
+        while (!posQ.isEmpty()) {
+            Pos cur = posQ.poll();
+            for (int d = 0; d < 4; d++) {
+                int nextX = cur.x + dx[d];
+                int nextY = cur.y + dy[d];
+                if (!inRange(nextX, nextY, visited)) continue;
+                if (visited[nextX][nextY]) continue;
+                if (grid[nextX][nextY] == 1) continue;
+                visited[nextX][nextY] = true;
+                cnt += 1;
+                posQ.add(new Pos(nextX, nextY));
             }
         }
+
         return cnt;
     }
 

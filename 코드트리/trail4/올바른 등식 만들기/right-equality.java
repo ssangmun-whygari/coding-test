@@ -13,27 +13,17 @@ public class Main {
         
         // dp[x][y] : x번째(0-based) 숫자까지 계산했을 때 합이 y인 가짓수
         long[][] dp = new long[N][41];
-        dp[0][numbers[0] + OFFSET] = 1L;
-        if (dp[0][numbers[0] * -1 + OFFSET] == 0) {
-            dp[0][numbers[0] * -1 + OFFSET] = 1L;
-        } else {
-            dp[0][numbers[0] * -1 + OFFSET] += 1L;
-        }
+        dp[0][numbers[0] + OFFSET] += 1L;
+        dp[0][numbers[0] * -1 + OFFSET] += 1L;
 
         for (int x = 0; x < N - 1; x++) {
             for (int y = 0; y <= 40; y++) {
                 // dp[x][y] -> dp[x + 1][y + numbers[x + 1]]
                 // dp[x][y] -> dp[x + 1][y - numbers[x + 1]]
                 if (dp[x][y] != 0 && inRange(y + numbers[x + 1])) {
-                    if (dp[x + 1][y + numbers[x + 1]] == 0) {
-                        dp[x + 1][y + numbers[x + 1]] = 0;
-                    }
                     dp[x + 1][y + numbers[x + 1]] += dp[x][y];
                 }
                 if (dp[x][y] != 0 && inRange(y - numbers[x + 1])) {
-                    if (dp[x + 1][y - numbers[x + 1]] == 0) {
-                        dp[x + 1][y - numbers[x + 1]] = 0;
-                    }
                     dp[x + 1][y - numbers[x + 1]] += dp[x][y];
                 }
             }

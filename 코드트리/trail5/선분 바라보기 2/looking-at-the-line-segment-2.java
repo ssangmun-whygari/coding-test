@@ -71,20 +71,17 @@ public class Main {
         }
         Collections.sort(points);
 
-        // y값이 가장 작은 점부터 빠져나옴
-        PriorityQueue<Point2> pq = new PriorityQueue<>(
-            (p1, p2) -> Integer.compare(p1.y, p2.y)
-        );
+        TreeSet<Point2> treeSet = new TreeSet<>((p1, p2) -> Integer.compare(p1.y, p2.y));
         Set<Integer> set = new HashSet<>();
 
         for (Point point : points) {
             if (point.v == 1) {
-                pq.add(new Point2(point.id, point.y));
-                set.add(pq.peek().id); // y값이 가장 작은 선분의 id
+                treeSet.add(new Point2(point.id, point.y));
+                set.add(treeSet.first().id); // y값이 가장 작은 선분의 id
             } else {
-                pq.remove(new Point2(point.id, point.y));
-                if (!pq.isEmpty()) {
-                    set.add(pq.peek().id);
+                treeSet.remove(new Point2(point.id, point.y));
+                if (!treeSet.isEmpty()) {
+                    set.add(treeSet.first().id);
                 }
             }
         }

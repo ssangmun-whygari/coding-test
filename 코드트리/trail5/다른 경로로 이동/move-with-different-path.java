@@ -16,8 +16,8 @@ public class Main {
             graph[v][u] = w;
         }
 
-        int[] dist_1_to_x = diijkstra(1, graph, false);
-        int[] dist_x_to_n = diijkstra(n, graph, true);
+        int[] dist_1_to_x = diijkstra(1, graph);
+        int[] dist_x_to_n = diijkstra(n, graph);
 
         // 사전순으로 앞선 경로를 복원
         List<Integer> path = new ArrayList<>();
@@ -37,12 +37,13 @@ public class Main {
         
         for (int i = 0; i < path.size() - 1; i++) {
             graph[path.get(i)][path.get(i + 1)] = 0;
+            graph[path.get(i + 1)][path.get(i)] = 0;
         }
-        int[] altDist = diijkstra(1, graph, false);
+        int[] altDist = diijkstra(1, graph);
         System.out.print(altDist[n]);
     }
 
-    public static int[] diijkstra(int start, int[][] graph, boolean reverse) {
+    public static int[] diijkstra(int start, int[][] graph) {
         int[] dist = new int[n + 1];
         Arrays.fill(dist, MAX_DIST);
         dist[start] = 0;
@@ -64,7 +65,7 @@ public class Main {
             visited[minIdx] = true;
 
             for (int j = 1; j <= n; j++) {
-                int nextDist = reverse ? graph[j][minIdx] : graph[minIdx][j];
+                int nextDist = graph[j][minIdx];
                 if (nextDist == 0) continue;
                 int newDist = minDist + nextDist;
                 if (newDist < dist[j]) {
